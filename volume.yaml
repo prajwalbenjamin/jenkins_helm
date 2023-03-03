@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jenkins-pv2
+  namespace: jenkins
+  annotations:
+    pv.beta.kubernetes.io/gid: "1000"
+spec:
+  storageClassName: jenkins-pv2
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 20Gi
+  persistentVolumeReclaimPolicy: Retain
+  azureFile:
+    # Replace with your secret name
+    secretName: azure-secret
+    # Replace with correct storage share name
+    shareName: testing
+    # In case the secret is stored in a different namespace
+    #secretNamespace: default
+    readOnly: false
+
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: jenkins-pv2
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
